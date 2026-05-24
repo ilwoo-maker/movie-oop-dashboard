@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>나만의 영화 추천 시스템</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Pretendard', 'Noto Sans KR', Arial, sans-serif;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.35s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .line-y {
+            position: relative;
+            width: 3px;
+            height: 30px;
+            background: linear-gradient(to bottom, #38bdf8, #818cf8);
+            margin: 0 auto;
+            border-radius: 999px;
+            box-shadow: 0 0 12px rgba(129, 140, 248, 0.5);
+        }
+
+        .line-y::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -6px;
+            transform: translateX(-50%) rotate(45deg);
+            width: 9px;
+            height: 9px;
+            border-right: 3px solid #818cf8;
+            border-bottom: 3px solid #818cf8;
+            border-radius: 1px;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-slate-950 text-slate-100">
+    <main class="max-w-7xl mx-auto px-5 py-8">
+        <header class="mb-8">
+            <p class="inline-block px-4 py-1 rounded-full bg-indigo-500/20 text-indigo-200 text-sm mb-4">
+                Data Structure Assignment 2 · OOP Dashboard
+            </p>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-3">나만의 영화 추천 시스템</h1>
+            <p class="text-slate-300 max-w-3xl leading-relaxed">
+                과제 1의 Movie OOP 설계를 대시보드 형태로 시각화했습니다.
+                왼쪽에서는 상속 구조를 확인하고, 오른쪽에서는 객체를 클릭해 오버라이딩된 메서드와 다형성 실행 결과를 확인할 수 있습니다.
+            </p>
+        </header>
+
+        <section class="bg-white/5 border border-white/10 rounded-3xl p-5 md:p-6 shadow-2xl mb-6">
+            <h2 class="text-xl font-bold mb-3">사용 방법</h2>
+            <div class="grid md:grid-cols-3 gap-3 text-sm text-slate-300">
+                <div class="rounded-2xl bg-slate-900/70 border border-slate-700 p-4">
+                    <p class="font-bold text-slate-100 mb-1">1. 상속 구조 확인</p>
+                    <p>왼쪽 패널에서 MovieADT → Movie → 장르별 영화 클래스 관계를 확인합니다.</p>
+                </div>
+                <div class="rounded-2xl bg-slate-900/70 border border-slate-700 p-4">
+                    <p class="font-bold text-slate-100 mb-1">2. 객체 클릭</p>
+                    <p>객체 카드를 클릭하면 display()와 get_recommendation() 실행 결과가 출력됩니다.</p>
+                </div>
+                <div class="rounded-2xl bg-slate-900/70 border border-slate-700 p-4">
+                    <p class="font-bold text-slate-100 mb-1">3. 다형성 비교</p>
+                    <p>Movie 배열 전체 실행 버튼으로 같은 메서드 호출이 객체별로 다르게 동작함을 확인합니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid lg:grid-cols-[360px_1fr] gap-6">
+            <aside class="bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl lg:sticky lg:top-6 h-fit">
+                <div class="flex items-start justify-between gap-3 mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold">상속 구조</h2>
+                        <p class="text-slate-400 text-sm mt-1">ADT → Base → Instances</p>
+                        <p class="text-xs text-slate-500 mt-2">화살표 방향은 상속 흐름을 의미합니다.</p>
+                    </div>
+                    <span
+                        class="text-xs px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300">Main
+                        View</span>
+                </div>
+
+                <div class="space-y-0 text-center">
+                    <div id="node-adt" class="rounded-2xl border border-cyan-400/50 bg-cyan-500/10 p-5 shadow-lg">
+                        <div class="flex items-center justify-center gap-2 mb-1">
+                            <p class="text-xs text-cyan-200">Abstract Class</p>
+                            <span
+                                class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-300/30 text-cyan-100">설계
+                                규칙</span>
+                        </div>
+                        <h3 class="text-2xl font-extrabold mt-1">MovieADT</h3>
+                        <p class="text-xs text-slate-300 mt-2">title, rating<br />get_recommendation(), display()</p>
+                    </div>
+
+                    <div class="line-y" title="inherits"></div>
+
+                    <div id="node-movie" class="rounded-2xl border border-indigo-400/50 bg-indigo-500/10 p-5 shadow-lg">
+                        <div class="flex items-center justify-center gap-2 mb-1">
+                            <p class="text-xs text-indigo-200">Base Class</p>
+                            <span
+                                class="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/20 border border-indigo-300/30 text-indigo-100">공통
+                                구현</span>
+                        </div>
+                        <h3 class="text-2xl font-extrabold mt-1">Movie</h3>
+                        <p class="text-xs text-slate-300 mt-2">공통 속성 관리<br />_title, _genre, __rating<br />title, rating
+                            {property}</p>
+                    </div>
+
+                    <div class="line-y" title="inherits"></div>
+
+                    <div class="grid gap-3">
+                        <button data-target="ActionMovie"
+                            class="inherit-node rounded-2xl border border-rose-400/40 bg-rose-500/10 p-4 text-left hover:bg-rose-500/20 transition">
+                            <p class="text-xs text-rose-200">Child Class</p>
+                            <h4 class="font-bold text-lg">🔥 ActionMovie</h4>
+                            <p class="text-xs text-slate-300 mt-1">속성: _action<br />display(), get_recommendation() 재정의
+                            </p>
+                        </button>
+                        <button data-target="RomanceMovie"
+                            class="inherit-node rounded-2xl border border-pink-400/40 bg-pink-500/10 p-4 text-left hover:bg-pink-500/20 transition">
+                            <p class="text-xs text-pink-200">Child Class</p>
+                            <h4 class="font-bold text-lg">💗 RomanceMovie</h4>
+                            <p class="text-xs text-slate-300 mt-1">속성: _romance<br />display(), get_recommendation() 재정의
+                            </p>
+                        </button>
+                        <button data-target="HorrorMovie"
+                            class="inherit-node rounded-2xl border border-purple-400/40 bg-purple-500/10 p-4 text-left hover:bg-purple-500/20 transition">
+                            <p class="text-xs text-purple-200">Child Class</p>
+                            <h4 class="font-bold text-lg">👻 HorrorMovie</h4>
+                            <p class="text-xs text-slate-300 mt-1">속성: _horror<br />display(), get_recommendation() 재정의
+                            </p>
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="space-y-6">
+                <section class="bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl">
+                    <div class="flex items-center justify-between gap-4 flex-wrap mb-5">
+                        <div>
+                            <h2 class="text-2xl font-bold">객체 선택 패널</h2>
+                            <p class="text-slate-400 text-sm mt-1">객체 카드를 클릭하면 Movie 타입 배열에서 같은 get_recommendation()
+                                메서드를 호출했을 때 실제 객체 타입별로 다른 결과가 출력되는 것을 확인할 수 있습니다.</p>
+                        </div>
+                        <button id="runAllBtn"
+                            class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition font-semibold">
+                            Movie 배열 전체 실행
+                        </button>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4" id="movieCards"></div>
+                </section>
+
+                <section class="grid xl:grid-cols-2 gap-6">
+                    <article class="bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl">
+                        <div class="flex items-center justify-between mb-5 gap-3">
+                            <div>
+                                <h2 class="text-2xl font-bold">메서드 호출 결과</h2>
+                                <p class="text-slate-400 text-sm mt-1">클릭한 객체의 display()와 get_recommendation() 오버라이딩 결과
+                                    확인</p>
+                            </div>
+                            <button id="resetBtn"
+                                class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 transition">초기화</button>
+                        </div>
+                        <div id="resultBox"
+                            class="rounded-2xl border border-dashed border-slate-600 bg-slate-900/70 p-6 min-h-72 flex flex-col justify-center">
+                            <p class="text-slate-400">객체 카드를 클릭하세요.</p>
+                            <h3 class="text-2xl font-bold mt-2">아직 실행된 메서드가 없습니다.</h3>
+                            <p class="text-slate-300 mt-3">선택 후 display()와 get_recommendation()의 오버라이딩 결과가 표시됩니다.</p>
+                            <div class="space-y-3 mt-5 text-sm">
+                                <button data-index="0"
+                                    class="hint-card w-full rounded-2xl bg-rose-500/10 border border-rose-400/30 p-4 text-rose-100 text-left hover:bg-rose-500/20 transition flex items-center justify-between gap-4">
+                                    <span class="flex items-center gap-3">
+                                        <span class="text-2xl">🔥</span>
+                                        <span>
+                                            <span class="block font-bold">ActionMovie</span>
+                                            <span class="block text-xs text-rose-200 mt-0.5 break-keep">액션 객체의 오버라이딩 결과
+                                                확인</span>
+                                        </span>
+                                    </span>
+                                    <span
+                                        class="text-xs px-3 py-1 rounded-full bg-slate-900/60 border border-rose-400/30 whitespace-nowrap flex-shrink-0">실행</span>
+                                </button>
+                                <button data-index="1"
+                                    class="hint-card w-full rounded-2xl bg-pink-500/10 border border-pink-400/30 p-4 text-pink-100 text-left hover:bg-pink-500/20 transition flex items-center justify-between gap-4">
+                                    <span class="flex items-center gap-3">
+                                        <span class="text-2xl">💗</span>
+                                        <span>
+                                            <span class="block font-bold">RomanceMovie</span>
+                                            <span class="block text-xs text-pink-200 mt-0.5 break-keep">로맨스 객체의 오버라이딩 결과
+                                                확인</span>
+                                        </span>
+                                    </span>
+                                    <span
+                                        class="text-xs px-3 py-1 rounded-full bg-slate-900/60 border border-pink-400/30 whitespace-nowrap flex-shrink-0">실행</span>
+                                </button>
+                                <button data-index="2"
+                                    class="hint-card w-full rounded-2xl bg-purple-500/10 border border-purple-400/30 p-4 text-purple-100 text-left hover:bg-purple-500/20 transition flex items-center justify-between gap-4">
+                                    <span class="flex items-center gap-3">
+                                        <span class="text-2xl">👻</span>
+                                        <span>
+                                            <span class="block font-bold">HorrorMovie</span>
+                                            <span class="block text-xs text-purple-200 mt-0.5 break-keep">공포 객체의 오버라이딩
+                                                결과 확인</span>
+                                        </span>
+                                    </span>
+                                    <span
+                                        class="text-xs px-3 py-1 rounded-full bg-slate-900/60 border border-purple-400/30 whitespace-nowrap flex-shrink-0">실행</span>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl">
+                        <h2 class="text-2xl font-bold">다형성 확인</h2>
+                        <p class="text-slate-400 text-sm mt-1 mb-5">Movie 부모 타입으로 객체들을 함께 관리하지만, 실행 시점에는 실제 자식 객체의
+                            오버라이딩된 get_recommendation() 메서드가 호출됩니다.</p>
+                        <div class="rounded-2xl bg-slate-900/70 border border-slate-700 p-5 mb-5">
+                            <p class="text-xs text-slate-400 mb-2">부모 타입 배열 예시</p>
+                            <pre class="text-sm text-slate-200 overflow-x-auto"><code>const movieList = [
+  new ActionMovie(...),
+  new RomanceMovie(...),
+  new HorrorMovie(...)
+];
+
+movieList.forEach(movie =&gt; {
+  movie.get_recommendation();
+});</code></pre>
+                        </div>
+                        <div id="polymorphismLog" class="space-y-3">
+                            <div class="rounded-2xl border border-dashed border-slate-600 p-5 text-slate-400">
+                                아직 실행 로그가 없습니다. 객체를 클릭하거나 전체 실행 버튼을 누르세요.
+                            </div>
+                        </div>
+                    </article>
+                </section>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        class MovieADT {
+            get title() { throw new Error('title 속성은 하위 클래스에서 구현해야 합니다.'); }
+            get rating() { throw new Error('rating 속성은 하위 클래스에서 구현해야 합니다.'); }
+            get_recommendation() { throw new Error('get_recommendation() 메서드는 하위 클래스에서 구현해야 합니다.'); }
+            display() { throw new Error('display() 메서드는 하위 클래스에서 구현해야 합니다.'); }
+        }
+
+        class Movie extends MovieADT {
+            constructor(title, genre, rating) {
+                super();
+                this._title = title;
+                this._genre = genre;
+                this.__rating = rating < 0 || rating > 5 ? 0 : rating;
+            }
+            get title() { return this._title; }
+            get rating() { return this.__rating; }
+            get_recommendation() { return `영화 '${this.title}'을(를) 추천해요!`; }
+            display() { return `제목: ${this.title} | 장르: ${this._genre} | 평점: ${this.rating}`; }
+        }
+
+        class ActionMovie extends Movie {
+            constructor(title, rating, action) {
+                super(title, '액션', rating);
+                this._action = action;
+            }
+            get_recommendation() { return `긴장감 '${this._action}'의 '${this._genre}' 영화 '${this.title}'를 만나보세요~!`; }
+            display() { return `액션 영화: '${this.title}' | 평점: ${this.rating} | 긴장감: '${this._action}'`; }
+        }
+
+        class RomanceMovie extends Movie {
+            constructor(title, rating, romance) {
+                super(title, '로맨스', rating);
+                this._romance = romance;
+            }
+            get_recommendation() { return `달달함 '${this._romance}'의 '${this._genre}' 영화 '${this.title}'를 만나보세요~!`; }
+            display() { return `로맨스 영화: '${this.title}' | 평점: ${this.rating} | 달달함: '${this._romance}'`; }
+        }
+
+        class HorrorMovie extends Movie {
+            constructor(title, rating, horror) {
+                super(title, '공포', rating);
+                this._horror = horror;
+            }
+            get_recommendation() { return `공포감 '${this._horror}'의 '${this._genre}' 영화 '${this.title}'를 만나보세요~!`; }
+            display() { return `공포 영화: '${this.title}' | 평점: ${this.rating} | 공포감: '${this._horror}'`; }
+        }
+
+        const movieList = [
+            { className: 'ActionMovie', label: '액션 객체', emoji: '🔥', color: 'rose', parentType: 'Movie', instance: new ActionMovie('범죄도시', 4.5, '상') },
+            { className: 'RomanceMovie', label: '로맨스 객체', emoji: '💗', color: 'pink', parentType: 'Movie', instance: new RomanceMovie('어바웃 타임', 4.8, '상') },
+            { className: 'HorrorMovie', label: '공포 객체', emoji: '👻', color: 'purple', parentType: 'Movie', instance: new HorrorMovie('곤지암', 3.9, '중') }
+        ];
+
+        const colorMap = {
+            rose: { card: 'border-rose-400/40 bg-rose-500/10 hover:bg-rose-500/20', badge: 'bg-rose-500/20 text-rose-200 border-rose-400/40', result: 'border-rose-400/60 bg-rose-500/10' },
+            pink: { card: 'border-pink-400/40 bg-pink-500/10 hover:bg-pink-500/20', badge: 'bg-pink-500/20 text-pink-200 border-pink-400/40', result: 'border-pink-400/60 bg-pink-500/10' },
+            purple: { card: 'border-purple-400/40 bg-purple-500/10 hover:bg-purple-500/20', badge: 'bg-purple-500/20 text-purple-200 border-purple-400/40', result: 'border-purple-400/60 bg-purple-500/10' }
+        };
+
+        const movieCards = document.getElementById('movieCards');
+        const resultBox = document.getElementById('resultBox');
+        const polymorphismLog = document.getElementById('polymorphismLog');
+        const resetBtn = document.getElementById('resetBtn');
+        const runAllBtn = document.getElementById('runAllBtn');
+
+        function renderCards() {
+            movieCards.innerHTML = movieList.map((movie, index) => `
+        <button data-index="${index}" class="movie-card rounded-3xl border ${colorMap[movie.color].card} p-5 shadow-xl transition hover:-translate-y-1 text-left">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-4xl">${movie.emoji}</span>
+            <span class="px-3 py-1 text-xs rounded-full border ${colorMap[movie.color].badge}">Overridden</span>
+          </div>
+          <p class="text-slate-400 text-sm">${movie.label}</p>
+          <h3 class="text-2xl font-bold mt-1">${movie.className}</h3>
+          <p class="text-slate-300 mt-3 text-sm leading-relaxed">${movie.instance.display()}</p>
+          <div class="mt-4 pt-4 border-t border-white/10 text-xs text-slate-400">
+            부모 타입 <span class="text-slate-100 font-semibold">${movie.parentType}</span>으로 관리됨
+          </div>
+        </button>
+      `).join('');
+        }
+
+        function showResult(movie) {
+            const recommendation = movie.instance.get_recommendation();
+            resultBox.className = `fade-in rounded-2xl border ${colorMap[movie.color].result} p-6 min-h-72 flex flex-col justify-center shadow-xl`;
+            resultBox.innerHTML = `
+        <p class="text-sm text-slate-300 mb-2">선택된 객체</p>
+        <h3 class="text-3xl font-extrabold mb-5">${movie.emoji} ${movie.className}</h3>
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
+          <div class="rounded-2xl bg-slate-950/50 border border-white/10 p-4">
+            <p class="text-slate-400 text-sm">부모 타입</p>
+            <p class="text-lg font-bold mt-1">${movie.parentType}</p>
+          </div>
+          <div class="rounded-2xl bg-slate-950/50 border border-white/10 p-4">
+            <p class="text-slate-400 text-sm">실제 객체 타입</p>
+            <p class="text-lg font-bold mt-1">${movie.className}</p>
+          </div>
+        </div>
+        <div class="rounded-2xl bg-slate-950/50 border border-white/10 p-4 mb-4">
+          <p class="text-slate-400 text-sm">오버라이딩 확인</p>
+          <p class="text-lg font-bold mt-1">movie.display() / movie.get_recommendation()</p>
+          <p class="text-sm text-slate-300 mt-2">같은 메서드 이름을 호출해도, 실제 객체가 ${movie.className}이므로 ${movie.className}에서 재정의한 메서드가 실행됩니다.</p>
+        </div>
+        <div class="space-y-4">
+          <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+            <div class="flex items-center justify-between gap-3 mb-2">
+              <p class="text-slate-400 text-sm">display() 실행 결과</p>
+              <span class="text-xs px-2 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700">객체 정보 출력</span>
+            </div>
+            <p class="text-base md:text-lg font-bold leading-relaxed break-keep">${movie.instance.display()}</p>
+          </div>
+          <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+            <div class="flex items-center justify-between gap-3 mb-2">
+              <p class="text-slate-400 text-sm">get_recommendation() 실행 결과</p>
+              <span class="text-xs px-2 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700">추천 문장 출력</span>
+            </div>
+            <p class="text-lg md:text-xl font-bold leading-relaxed break-keep">${recommendation}</p>
+          </div>
+        </div>
+      `;
+            addLog(movie);
+        }
+
+        function createComparisonCard(movie) {
+            return `
+        <div class="fade-in rounded-2xl border ${colorMap[movie.color].result} p-5">
+          <div class="flex items-start justify-between gap-4 mb-4">
+            <div>
+              <p class="text-xs text-slate-400">부모 타입 Movie 배열 안의 실제 객체</p>
+              <h3 class="text-xl font-extrabold mt-1">${movie.emoji} ${movie.className}</h3>
+            </div>
+            <span class="text-xs px-3 py-1 rounded-full bg-slate-900/70 border border-white/10 whitespace-nowrap">Override</span>
+          </div>
+          <div class="grid gap-3 text-sm">
+            <div class="rounded-xl bg-slate-950/50 border border-white/10 p-3">
+              <p class="text-slate-400">부모 타입으로 호출</p>
+              <p class="font-bold mt-1">movie.get_recommendation()</p>
+            </div>
+            <div class="rounded-xl bg-slate-950/50 border border-white/10 p-3">
+              <p class="text-slate-400">실제로 실행된 메서드</p>
+              <p class="font-bold mt-1">${movie.className}.get_recommendation()</p>
+            </div>
+            <div class="rounded-xl bg-slate-950/50 border border-white/10 p-3">
+              <p class="text-slate-400">실행 결과</p>
+              <p class="font-bold mt-1 leading-relaxed break-keep">${movie.instance.get_recommendation()}</p>
+            </div>
+          </div>
+        </div>
+      `;
+        }
+
+        function addLog(movie) {
+            polymorphismLog.innerHTML = createComparisonCard(movie);
+        }
+
+        function runAll() {
+            polymorphismLog.innerHTML = `
+        <div class="rounded-2xl border border-indigo-400/40 bg-indigo-500/10 p-5">
+          <p class="text-sm text-indigo-200 font-semibold">전체 비교 결과</p>
+          <h3 class="text-xl font-extrabold mt-1">Movie 배열 전체 실행</h3>
+          <p class="text-sm text-slate-300 mt-2 leading-relaxed">
+            같은 부모 타입 Movie로 관리되는 객체들에게 동일하게 movie.get_recommendation()을 호출했지만,
+            실제 객체 타입에 따라 서로 다른 오버라이딩 메서드가 실행됩니다.
+          </p>
+        </div>
+        ${movieList.map((movie) => createComparisonCard(movie)).join('')}
+      `;
+        }
+
+        function resetResult() {
+            resultBox.className = 'rounded-2xl border border-dashed border-slate-600 bg-slate-900/70 p-6 min-h-72 flex flex-col justify-center';
+            resultBox.innerHTML = `
+        <p class="text-slate-400">객체 카드를 클릭하세요.</p>
+        <h3 class="text-2xl font-bold mt-2">아직 실행된 메서드가 없습니다.</h3>
+        <p class="text-slate-300 mt-3">선택 후 display()와 get_recommendation()의 오버라이딩 결과가 표시됩니다.</p>
+        <div class="space-y-3 mt-5 text-sm">
+          <button data-index="0" class="hint-card w-full rounded-2xl bg-rose-500/10 border border-rose-400/30 p-4 text-rose-100 text-left hover:bg-rose-500/20 transition flex items-center justify-between gap-4">
+            <span class="flex items-center gap-3">
+              <span class="text-2xl">🔥</span>
+              <span>
+                <span class="block font-bold">ActionMovie</span>
+                <span class="block text-xs text-rose-200 mt-0.5 break-keep">액션 객체의 오버라이딩 결과 확인</span>
+              </span>
+            </span>
+            <span class="text-xs px-3 py-1 rounded-full bg-slate-900/60 border border-rose-400/30 whitespace-nowrap flex-shrink-0">실행</span>
+          </button>
+          <button data-index="1" class="hint-card w-full rounded-2xl bg-pink-500/10 border border-pink-400/30 p-4 text-pink-100 text-left hover:bg-pink-500/20 transition flex items-center justify-between gap-4">
+            <span class="flex items-center gap-3">
+              <span class="text-2xl">💗</span>
+              <span>
+                <span class="block font-bold">RomanceMovie</span>
+                <span class="block text-xs text-pink-200 mt-0.5 break-keep">로맨스 객체의 오버라이딩 결과 확인</span>
+              </span>
+            </span>
+            <span class="text-xs px-3 py-1 rounded-full bg-slate-900/60 border border-pink-400/30 whitespace-nowrap flex-shrink-0">실행</span>
+          </button>
+          <button data-index="2" class="hint-card w-full rounded-2xl bg-purple-500/10 border border-purple-400/30 p-4 text-purple-100 text-left hover:bg-purple-500/20 transition flex items-center justify-between gap-4">
+            <span class="flex items-center gap-3">
+              <span class="text-2xl">👻</span>
+              <span>
+                <span class="block font-bold">HorrorMovie</span>
+                <span class="block text-xs text-purple-200 mt-0.5 break-keep">공포 객체의 오버라이딩 결과 확인</span>
+              </span>
+            </span>
+            <span class="text-xs px-3 py-1 rounded-full bg-slate-900/60 border border-purple-400/30 whitespace-nowrap flex-shrink-0">실행</span>
+          </button>
+        </div>
+      `;
+            polymorphismLog.innerHTML = `
+        <div class="rounded-2xl border border-dashed border-slate-600 p-5 text-slate-400">
+          아직 실행 로그가 없습니다. 객체를 클릭하거나 전체 실행 버튼을 누르세요.
+        </div>
+      `;
+        }
+
+        renderCards();
+
+        document.querySelectorAll('.movie-card').forEach((card) => {
+            card.addEventListener('click', () => showResult(movieList[Number(card.dataset.index)]));
+        });
+
+        document.querySelectorAll('.inherit-node').forEach((node) => {
+            node.addEventListener('click', () => {
+                const movie = movieList.find(item => item.className === node.dataset.target);
+                showResult(movie);
+            });
+        });
+
+        resultBox.addEventListener('click', (event) => {
+            const hintCard = event.target.closest('.hint-card');
+            if (!hintCard) return;
+            showResult(movieList[Number(hintCard.dataset.index)]);
+        });
+
+        runAllBtn.addEventListener('click', runAll);
+        resetBtn.addEventListener('click', resetResult);
+    </script>
+</body>
+
+</html>
