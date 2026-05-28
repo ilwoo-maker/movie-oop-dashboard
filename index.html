@@ -158,10 +158,17 @@
                             <p class="text-slate-400 text-sm mt-1">객체 카드를 클릭하면 Movie 타입 배열에서 같은 get_recommendation()
                                 메서드를 호출했을 때 실제 객체 타입별로 다른 결과가 출력되는 것을 확인할 수 있습니다.</p>
                         </div>
-                        <button id="runAllBtn"
-                            class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition font-semibold">
-                            Movie 배열 전체 실행
-                        </button>
+                        <div class="flex items-center gap-3 flex-wrap">
+                            <button id="runAllBtn"
+                                class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition font-semibold">
+                                Movie 배열 전체 실행
+                            </button>
+                            <p
+                                class="text-xs text-indigo-100 bg-indigo-500/10 border border-indigo-400/30 rounded-xl px-3 py-2 leading-relaxed max-w-md">
+                                이 버튼을 클릭하면 Movie 배열에 담긴 모든 객체의 오버라이딩된 display()와 get_recommendation() 결과를 한 번에 비교할 수
+                                있습니다.
+                            </p>
+                        </div>
                     </div>
                     <div class="grid md:grid-cols-3 gap-4" id="movieCards"></div>
                 </section>
@@ -390,14 +397,18 @@ movieList.forEach(movie =&gt; {
           <div class="grid gap-3 text-sm">
             <div class="rounded-xl bg-slate-950/50 border border-white/10 p-3">
               <p class="text-slate-400">부모 타입으로 호출</p>
+              <p class="font-bold mt-1">movie.display()</p>
               <p class="font-bold mt-1">movie.get_recommendation()</p>
             </div>
             <div class="rounded-xl bg-slate-950/50 border border-white/10 p-3">
               <p class="text-slate-400">실제로 실행된 메서드</p>
+              <p class="font-bold mt-1">${movie.className}.display()</p>
               <p class="font-bold mt-1">${movie.className}.get_recommendation()</p>
             </div>
             <div class="rounded-xl bg-slate-950/50 border border-white/10 p-3">
-              <p class="text-slate-400">실행 결과</p>
+              <p class="text-slate-400">display() 실행 결과</p>
+              <p class="font-bold mt-1 leading-relaxed break-keep">${movie.instance.display()}</p>
+              <p class="text-slate-400 mt-3">get_recommendation() 실행 결과</p>
               <p class="font-bold mt-1 leading-relaxed break-keep">${movie.instance.get_recommendation()}</p>
             </div>
           </div>
@@ -415,7 +426,7 @@ movieList.forEach(movie =&gt; {
           <p class="text-sm text-indigo-200 font-semibold">전체 비교 결과</p>
           <h3 class="text-xl font-extrabold mt-1">Movie 배열 전체 실행</h3>
           <p class="text-sm text-slate-300 mt-2 leading-relaxed">
-            같은 부모 타입 Movie로 관리되는 객체들에게 동일하게 movie.get_recommendation()을 호출했지만,
+            같은 부모 타입 Movie로 관리되는 객체들에게 동일하게 movie.display()와 movie.get_recommendation()을 호출했지만,
             실제 객체 타입에 따라 서로 다른 오버라이딩 메서드가 실행됩니다.
           </p>
         </div>
